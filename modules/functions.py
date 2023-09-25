@@ -2,13 +2,14 @@ x = {}
 msg = "Success"
 
 
-def edit(x):
+def edit(x, msg):
     while True:
-        print("What would you like to edit\nType \"never mind\" if you made a mistake or changed your mind")
+        print(x)
+        print("What would you like to edit\nType \"exit\" if you made a mistake or changed your mind")
         option = input(": ").lower()
         if "vote" in option:
             print("Are you trying to rig elections?")
-        elif option == "never mind":
+        elif option == "exit":
             print("Okay")
             break
         else:
@@ -16,6 +17,7 @@ def edit(x):
                 assert x[option]
                 new = input(f"Enter new {option}: ")
                 x[option] = new
+                print(msg)
                 break
             except KeyError:
                 print("Invalid option")
@@ -29,6 +31,6 @@ def create(x, msg):
             print(msg)
             break
         elif really == "N".lower():
-            edit(x)
+            edit(x, msg="Details edited Successfully")
         else:
             print("Invalid option")
