@@ -11,7 +11,7 @@ collection = db["data"]
 # collection.insert_one(x)
 
 
-def edit(x, msg):
+def edit(x, msg):  # will make separate for update
     while True:
         # x = collection.find_one()
         # for x in collection.find():
@@ -43,15 +43,22 @@ def create(x, msg):
         print(x)
         really = input("Is this correct? (Y/N): ")
         if really == "Y".lower():
-            collection.insert_one(x)
+            y = collection.insert_one(x)
+            print(f'Your ID is {y.inserted_id}')  # works, just ned to work out custom IDs in my head
             print(msg)
             break
         elif really == "N".lower():
             edit(x, msg="Details edited Successfully")
-            break
         else:
             print("Invalid option")
 
 
-for x in collection.find():
-    print(x)
+# mydict = { "name": "Peter", "address": "Lowstreet 27" }
+
+# x = collection.insert_one(mydict)
+
+# print(x.inserted_id)
+# for x in collection.find():
+# print(x)
+# print(x.inserted_id)
+
