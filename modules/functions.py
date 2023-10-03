@@ -53,6 +53,30 @@ def create(x, msg):
             print("Invalid option")
 
 
+"""try:
+        # Attempt to insert a new user document
+        collection.insert_one({"user_name": user_name, "password": password})
+        print("User created successfully.")
+    except DuplicateKeyError:
+        print("Username already exists. Please choose a different username.")"""
+
+
+def login():
+    user = input("Name?: ")
+    password = input("Password?: ")
+    who = {"user_name": user, "password": password}
+    w = collection.find_one(who)
+    if w:
+        print("yey")
+
+# for x in collection.find():
+# print(x)
+# user = input("Name?: ")
+# who = {"surname": user}
+# w = collection.find(who)
+# if w:
+# print("yey")  # works, can use
+
 # mydict = { "name": "Peter", "address": "Lowstreet 27" }
 
 # x = collection.insert_one(mydict)
@@ -61,4 +85,3 @@ def create(x, msg):
 # for x in collection.find():
 # print(x)
 # print(x.inserted_id)
-
