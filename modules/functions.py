@@ -61,7 +61,7 @@ def create(x, msg):
         print("Username already exists. Please choose a different username.")"""
 
 
-def login():
+def login():  # still need to create a model for users and passwords, then use it as a relationship thing
     user = input("Name?: ")
     password = input("Password?: ")
     who = {"user_name": user, "password": password}
