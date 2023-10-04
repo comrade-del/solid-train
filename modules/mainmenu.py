@@ -1,6 +1,7 @@
 from modules.functions import create, edit, login
 
-form = {}
+# this is supposed to be in the main.py file
+# should I just move to making a webapp instead?
 
 
 print("Welcome")
