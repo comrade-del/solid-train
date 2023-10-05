@@ -6,6 +6,7 @@ msg = "Success"
 client = MongoClient("mongodb://localhost:27017/")
 db = client["myapp"]
 collection = db["data"]
+usercol = db["user"]
 
 
 # collection.insert_one(x)
@@ -43,7 +44,15 @@ def create(x, msg):
         print(x)
         really = input("Is this correct? (Y/N): ")
         if really == "Y".lower():
-            y = collection.insert_one(x)
+            db = input("add where?: ")
+            if db == "user".lower():
+                y = usercol.insert_one(x)
+            elif db == "census".lower():
+                y = collection.insert_one(x)
+            elif db == "voting".lower():
+                pass  # will create a database for voters if users works
+            else:
+                print("No such database")
             print(f'Your ID is {y.inserted_id}')  # works, just ned to work out custom IDs in my head
             print(msg)
             break
@@ -65,12 +74,13 @@ def login():  # still need to create a model for users and passwords, then use i
     user = input("Name?: ")
     password = input("Password?: ")
     who = {"user_name": user, "password": password}
-    w = collection.find_one(who)
+    w = usercol.find_one(who)
     if w:
-        print("yey")
+        return True
 
-# for x in collection.find():
-# print(x)
+
+for x in usercol.find():
+    print(x)
 # user = input("Name?: ")
 # who = {"surname": user}
 # w = collection.find(who)
