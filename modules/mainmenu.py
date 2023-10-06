@@ -16,8 +16,9 @@ menu = input("What would you like to do?: ")
 if menu == "1":
     user()  # might have to break into two functions for create and edit
 elif menu == "2":
-    authenticated_user = login()  # worked at first try😭😭
-    if authenticated_user:
+    authenticated_user_id = login()  # worked at first try😭😭
+    if authenticated_user_id:
+        user_id = authenticated_user_id
         while True:
             print("Menu:")
             print("1: Census Form")
@@ -25,7 +26,7 @@ elif menu == "2":
             print("3: Exit")
             page = input("What page would you like to visit? ")
             if page == "1":
-                census()
+                census(user_id)
             elif page == "2":
                 voting()
             elif page == "3":

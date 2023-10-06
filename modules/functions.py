@@ -1,7 +1,9 @@
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 
 x = {}
 msg = "Success"
+user_id = None
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["myapp"]
@@ -46,15 +48,22 @@ def create(x, msg):
         if really == "Y".lower():
             db = input("add where?: ")
             if db == "user".lower():
-                y = usercol.insert_one(x)
+                u = usercol.insert_one(x)
+                user_id = u.inserted_id
+                print(msg)
+                print(f'Your ID is {user_id}')  # works, just need to work out custom IDs in my head
             elif db == "census".lower():
-                y = collection.insert_one(x)
+                try:
+                    c = collection.insert_one(x)
+                    print(msg)
+                except DuplicateKeyError:
+                    print("You already have an entry. Maybe you mean edit?")
+
             elif db == "voting".lower():
+                # print(msg)
                 pass  # will create a database for voters if users works
             else:
                 print("No such database")
-            print(f'Your ID is {y.inserted_id}')  # works, just ned to work out custom IDs in my head
-            print(msg)
             break
         elif really == "N".lower():
             edit(x, msg="Details edited Successfully")
@@ -70,17 +79,19 @@ def create(x, msg):
         print("Username already exists. Please choose a different username.")"""
 
 
-def login():  # still need to create a model for users and passwords, then use it as a relationship thing
+def login():
     user = input("Name?: ")
     password = input("Password?: ")
     who = {"user_name": user, "password": password}
-    w = usercol.find_one(who)
-    if w:
-        return True
+    authenticated_user = usercol.find_one(who)
+    if authenticated_user:
+        return authenticated_user["_id"]  # Return the user_id of the authenticated user
+    else:
+        return None  # Return None if authentication fails
 
 
-for x in usercol.find():
-    print(x)
+# for x in collection.find():
+# print(x)
 # user = input("Name?: ")
 # who = {"surname": user}
 # w = collection.find(who)
