@@ -4,6 +4,7 @@ from pymongo.errors import DuplicateKeyError
 x = {}
 msg = "Success"
 user_id = None
+_id = None
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client["myapp"]
@@ -14,7 +15,12 @@ usercol = db["user"]
 # collection.insert_one(x)
 
 
-def edit(x, msg):  # will make separate for update
+def edit(_id, msg, db):  # will make separate for update
+    who = {"_id": _id}
+    if db == "census":
+        x = collection.find_one(who)
+    elif db == "user":
+        x = usercol.find_one(who)
     while True:
         # x = collection.find_one()
         # for x in collection.find():
@@ -28,13 +34,17 @@ def edit(x, msg):  # will make separate for update
             print("Okay")
             break
         else:
+            collection.find_one(who)
             try:
                 assert x[option]
                 new = input(f"Enter new {option}: ")
                 _old = {option: x[option]}
                 _new = {"$set": {option: new}}
                 x[option] = new
-                collection.update_one(_old, _new)
+                if db == "census":
+                    collection.update_one(_old, _new)
+                elif db == "user":
+                    usercol.update_one(_old, _new)
                 print(msg)
                 break
             except KeyError:
@@ -51,7 +61,7 @@ def create(x, msg):
                 u = usercol.insert_one(x)
                 user_id = u.inserted_id
                 print(msg)
-                print(f'Your ID is {user_id}')  # works, just need to work out custom IDs in my head
+                # print(f'Your ID is {user_id}')  # works, just need to work out custom IDs in my head
             elif db == "census".lower():
                 try:
                     c = collection.insert_one(x)
@@ -91,6 +101,11 @@ def login():
 
 
 # for x in collection.find():
+# print(x)
+# user = input("Name?: ")
+# password = input("Password?: ")
+# who = {"user_name": user, "password": password}
+# x = usercol.find_one(who)
 # print(x)
 # user = input("Name?: ")
 # who = {"surname": user}

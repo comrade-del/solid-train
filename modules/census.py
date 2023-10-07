@@ -14,7 +14,7 @@ def census(user_id):
                         other_names=input("Other names: "), gender=input("Gender: "), dob=input("Date of birth: "))
             create(form, msg="Thank you for filling the form")
         elif _do == 2:
-            edit(form, msg="Details edited Successfully")
+            edit(_id=user_id, msg="Details edited Successfully", db="census")
         elif _do == 3:
             break
         else:

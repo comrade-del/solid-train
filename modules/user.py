@@ -3,24 +3,16 @@
 from modules.functions import create, edit
 
 
-def user():
+def user_create():
     print("Welcome")
     while True:
-        _do = eval(input("What would you like to do?\n1: Add new entry\n2: Edit existing entry\n3: Exit: "))
-        if _do == 1:
-            user_name = input("User name: ")
-            password = input("Password: ")
-            user_data = {"user_name": user_name, "password": password}
-            create(user_data, msg="User Added")
-        elif _do == 2:
-            user_name = input("User name: ")
-            password = input("Password: ")
-            user_data = {"user_name": user_name, "password": password}
-            edit(user_data, msg="Details edited Successfully")
-        elif _do == 3:
-            break
-        else:
-            print("Invalid option. Type either \"1\", \"2\" or \"3\"")
+        user_name = input("User name: ")
+        password = input("Password: ")
+        user_data = {"user_name": user_name, "password": password}
+        create(user_data, msg="User Added")
 
+
+def user_edit(user_id):
+    edit(_id=user_id, msg="Details edited Successfully", db="user")
 # Example usage of the user function:
 # user()
