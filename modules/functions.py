@@ -12,19 +12,16 @@ collection = db["data"]
 usercol = db["user"]
 
 
-# collection.insert_one(x)
-
-
 def edit(_id, msg, db):  # will make separate for update
-    who = {"_id": _id}
-    if db == "census":
-        x = collection.find_one(who)
-    elif db == "user":
-        x = usercol.find_one(who)
     while True:
-        # x = collection.find_one()
-        # for x in collection.find():
-        # print(x) will introduce properly when I fix in sign up and log in
+        who = {"_id": _id}
+        if db == "census":
+            x = collection.find_one(who)
+            if x is None:
+                print("You have not filled the form")
+                break
+        elif db == "user":
+            x = usercol.find_one(who)
         print(x)
         print("What would you like to edit\nType \"exit\" if you changed your mind")
         option = input(": ").lower()
@@ -51,12 +48,11 @@ def edit(_id, msg, db):  # will make separate for update
                 print("Invalid option")
 
 
-def create(x, msg):
+def create(x, msg, db):
     while True:
         print(x)
         really = input("Is this correct? (Y/N): ")
         if really == "Y".lower():
-            db = input("add where?: ")
             if db == "user".lower():
                 u = usercol.insert_one(x)
                 user_id = u.inserted_id
@@ -75,8 +71,8 @@ def create(x, msg):
             else:
                 print("No such database")
             break
-        elif really == "N".lower():
-            edit(x, msg="Details edited Successfully")
+        elif really == "N".lower():  # half worked but can't edit what hasn't entered
+            edit(x, msg="Details edited Successfully", db=db)
         else:
             print("Invalid option")
 
@@ -98,7 +94,6 @@ def login():
         return authenticated_user["_id"]  # Return the user_id of the authenticated user
     else:
         return None  # Return None if authentication fails
-
 
 # for x in collection.find():
 # print(x)

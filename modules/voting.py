@@ -5,7 +5,6 @@ from modules.functions import create
 
 def voting(user_id):
     print("Election Time")
-
     candidate = dict(name=input("Candidate name: "), party=input("Represented party: "),
                      gender=input("Gender: "), vote_count=0)
 

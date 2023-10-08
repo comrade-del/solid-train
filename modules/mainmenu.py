@@ -1,8 +1,7 @@
-from modules.census import census
-from modules.functions import login
-
 # this is supposed to be in the main.py file
 # should I just move to making a webapp instead?
+from modules.census import census
+from modules.functions import login
 from modules.user import user_edit, user_create
 from modules.voting import voting
 
@@ -29,7 +28,7 @@ elif menu == "2":
             if page == "1":
                 census(user_id)
             elif page == "2":
-                voting()
+                voting(user_id)
             elif page == "3":
                 user_edit(user_id)
             elif page == "4":
