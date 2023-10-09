@@ -100,10 +100,11 @@ def create(x, msg, db):
 def login():
     user = input("Name?: ")
     password = input("Password?: ")
-    who = {"user_name": user, "password": password}
+    who = {"username": user, "password": password}
     authenticated_user = usercol.find_one(who)
     if authenticated_user:
-        return authenticated_user["_id"]  # Return the user_id of the authenticated user
+        privilege = authenticated_user.get("type")
+        return authenticated_user["_id"], privilege  # Return the user_id and privilege of the authenticated user
     else:
         return None  # Return None if authentication fails
 
