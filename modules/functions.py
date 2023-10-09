@@ -12,7 +12,7 @@ collection = db["data"]
 usercol = db["user"]
 
 
-def edit(_id, msg, db):  # will make separate for update
+def update(_id, msg, db):  # will make separate for update
     while True:
         who = {"_id": _id}
         if db == "census":
@@ -48,6 +48,19 @@ def edit(_id, msg, db):  # will make separate for update
                 print("Invalid option")
 
 
+def edit(x):
+    print(x)
+    print("What would you like to edit\nType \"exit\" if you changed your mind")
+    option = input(": ").lower()
+    try:
+        assert x[option]
+        new = input(f"Enter new {option}: ")
+        x[option] = new
+        # print(msg)
+    except KeyError:
+        print("Invalid option")
+
+
 def create(x, msg, db):
     while True:
         print(x)
@@ -63,16 +76,15 @@ def create(x, msg, db):
                     c = collection.insert_one(x)
                     print(msg)
                 except DuplicateKeyError:
-                    print("You already have an entry. Maybe you mean edit?")
-
+                    print("You already have an entry. Maybe you mean update?")
             elif db == "voting".lower():
                 # print(msg)
                 pass  # will create a database for voters if users works
             else:
                 print("No such database")
             break
-        elif really == "N".lower():  # half worked but can't edit what hasn't entered
-            edit(x, msg="Details edited Successfully", db=db)
+        elif really == "N".lower():
+            edit(x)
         else:
             print("Invalid option")
 
