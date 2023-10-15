@@ -97,8 +97,7 @@ def login():
     if authenticated_user:
         privilege = authenticated_user.get("privilege")
         status = authenticated_user.get("status")
-        return authenticated_user[
-                   "_id"], privilege, status  # Return the user_id and privilege of the authenticated user
+        return authenticated_user["_id"], privilege, status  # Return the user_id and privilege of the authenticated user
     else:
         return None  # Return None if authentication fails
 
