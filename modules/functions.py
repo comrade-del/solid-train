@@ -18,12 +18,13 @@ def update(_id, msg, db):  # will make separate for update
         who = {"_id": _id}
         if db == "census":
             x = census.find_one(who)
+            print(x)
             if x is None:
                 print("You have not filled the form")
                 break
         elif db == "user":
             x = users.find_one(who)
-        print(x)
+            print(x)
         print("What would you like to edit\nType \"exit\" if you changed your mind")
         option = input(": ").lower()
         if "vote" in option:
@@ -32,7 +33,6 @@ def update(_id, msg, db):  # will make separate for update
             print("Okay")
             break
         else:
-            census.find_one(who)
             try:
                 assert x[option]
                 new = input(f"Enter new {option}: ")
@@ -68,18 +68,17 @@ def create(x, msg, db):
         really = input("Is this correct? (Y/N): ")
         if really == "Y".lower():
             if db == "user".lower():
-                u = users.insert_one(x)
-                user_id = u.inserted_id
+                users.insert_one(x)
                 print(msg)
-                # print(f'Your ID is {user_id}')  # works, just need to work out custom IDs in my head
             elif db == "census".lower():
                 try:
-                    c = census.insert_one(x)
+                    census.insert_one(x)
                     print(msg)
                 except DuplicateKeyError:
                     print("You already have an entry. Maybe you mean update?")
             elif db == "voting".lower():
-                # print(msg)
+                voting.insert_one(x)
+                print(msg)
                 pass  # will create a database for voters if users works
             else:
                 print("No such database")
@@ -93,13 +92,46 @@ def create(x, msg, db):
 def login():
     user = input("Name?: ")
     password = input("Password?: ")
-    who = {"username": user, "password": password}
+    who = {"user_name": user, "password": password}
     authenticated_user = users.find_one(who)
     if authenticated_user:
-        privilege = authenticated_user.get("type")
-        return authenticated_user["_id"], privilege  # Return the user_id and privilege of the authenticated user
+        privilege = authenticated_user.get("privilege")
+        status = authenticated_user.get("status")
+        return authenticated_user[
+                   "_id"], privilege, status  # Return the user_id and privilege of the authenticated user
     else:
         return None  # Return None if authentication fails
+
+
+def vote(_id, party):
+    voter = {"_id": _id}
+    vodetails = users.find_one(voter)
+    before = vodetails.get("status")
+    after = "Voted"
+    _olds = {"status": before}
+    _news = {"$set": {"status": after}}
+    who = {"party": party}
+    candetails = voting.find_one(who)
+    vote = candetails.get("vote_count")
+    votes = vote + 1
+    _old = {"vote_count": vote}
+    _new = {"$set": {"vote_count": votes}}
+    voting.update_one(_old, _new)
+    users.update_one(_olds, _news)
+    print("Thank you for voting")
+
+
+def showv():
+    c = voting.find({}, {"_id": 0, "party": 1})
+    for i, c in enumerate(c, start=1):
+        print(f"{i}. {c['party']}")
+
+
+def voteres():
+    c = voting.find({}, {"_id": 0, "party": 1, "vote_count": 1})
+    for i, c in enumerate(c, start=1):
+        print(f"{i}. {c['party']}, {c['vote_count']}")
+
 
 # for x in collection.find():
 # print(x)
@@ -119,6 +151,18 @@ def login():
 # x = collection.insert_one(mydict)
 
 # print(x.inserted_id)
-# for x in collection.find():
+# x = {"user_name": "Admin2", "password": "2222", "privilege": "admin", "status": "na"}
+# users.insert_one(x)
+# print(msg)
+
+# n = 1
+# for x in users.find():
 # print(x)
+# n += 1
+# mycol.find({},{ "_id": 0, "name": 1, "address": 1 })
+# candidate = dict(name=input("Candidate name: "), party=input("Represented party: "), gender=input("Gender: "), vote_count=0)
+"""c = voting.find({}, {"_id": 0, "party": 1})
+for i, c in enumerate(c, start=1):
+    print(f"{i}. {c['party']}")"""
+
 # print(x.inserted_id)

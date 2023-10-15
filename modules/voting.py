@@ -1,18 +1,23 @@
 # Election
 
-from modules.functions import create, update
+from modules.functions import create, update, showv, vote, voteres
 
 
-def voting(user_id, privilege):
+def voting(user_id, privilege, status):
     print("Election Time")
     print("You must be logged in as a user to vote")
     while True:
         if privilege == "user":
             _do = eval(input("What would you like to do?\n1: Vote\n2: View results\n3: Exit: "))
             if _do == 1:
-                pass  # increase vote_count function
+                if status == "Not Voted":
+                    showv()
+                    party = input("Type in a party of your choice: ")
+                    vote(user_id, party)
+                elif status == "Voted":
+                    print("You have voted already")
             elif _do == 2:
-                pass  # fetch details
+                voteres()
             elif _do == 3:
                 break
             else:

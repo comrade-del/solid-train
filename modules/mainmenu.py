@@ -16,8 +16,9 @@ if menu == "1":
     user_create()
 elif menu == "2":
     result = login()  # worked at first try😭😭
+    print(result)  # tuple
     if result:
-        user_id, privilege = result
+        user_id, privilege, status = result
         if privilege == "user":
             while True:
                 print("User Menu:")
@@ -29,7 +30,7 @@ elif menu == "2":
                 if page == "1":
                     census(user_id, privilege)
                 elif page == "2":
-                    voting(user_id, privilege)
+                    voting(user_id, privilege, status)
                 elif page == "3":
                     user_edit(user_id)
                 elif page == "4":
@@ -48,7 +49,7 @@ elif menu == "2":
                 if page == "1":
                     census(user_id, privilege)
                 elif page == "2":
-                    voting(user_id, privilege)
+                    voting(user_id, privilege, status)
                 elif page == "3":
                     user_edit(user_id)
                 elif page == "4":
