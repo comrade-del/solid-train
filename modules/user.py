@@ -1,6 +1,6 @@
 # User, Password
 
-from modules.functions import create, update
+from modules.functions import create, update, delete_user_data
 
 
 def user_create():
@@ -15,5 +15,5 @@ def user_edit(user_id):
     update(user_id, msg="Details edited Successfully", db="user")
 
 
-def user_delete(privilege):
-    pass  # delete function
+def user_delete():
+    delete_user_data()

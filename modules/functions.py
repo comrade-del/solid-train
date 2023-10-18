@@ -10,6 +10,7 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["myapp"]
 census = db["data"]
 users = db["user"]
+# users.create_index("user_name", unique=True)  # will unleash after dropping, might not even be useful again
 voting = db["voting"]
 
 
@@ -97,7 +98,8 @@ def login():
     if authenticated_user:
         privilege = authenticated_user.get("privilege")
         status = authenticated_user.get("status")
-        return authenticated_user["_id"], privilege, status  # Return the user_id and privilege of the authenticated user
+        return authenticated_user[
+                   "_id"], privilege, status  # Return the user_id and privilege of the authenticated user
     else:
         return None  # Return None if authentication fails
 
@@ -132,6 +134,71 @@ def voteres():
         print(f"{i}. {c['party']}, {c['vote_count']}")
 
 
+def delete_user_data():
+    try:
+        u = users.find({"privilege": "user"}, {"_id": 0, "user_name": 1})
+        users_dict = {}
+        for i, doc in enumerate(u, start=1):
+            user_name = doc.get('user_name')
+            if user_name:
+                users_dict[i] = user_name
+
+        if not users_dict:
+            print("No user data found.")
+            return
+
+        for i, p in enumerate(users_dict, start=1):
+            print(f'{i}. {users_dict[i]}')
+
+        w = int(input("Select one: "))
+
+        if w in users_dict:
+            s = users_dict[w]
+            user = users.find_one({"user_name": s})
+
+            if user:
+                user_id = user["_id"]
+                census.delete_one({"user_id": user_id})
+                # then subtract one from vote_count, too tasking
+                users.delete_one({"_id": user_id})
+                print("User and related data deleted successfully.")
+            else:
+                print("Incorrect username")
+        else:
+            print("Invalid selection.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+"""def delete_user_data():
+    u = users.find({}, {"_id": 0, "user_name": 1})
+    users_dict = {}
+    for i, doc in enumerate(u, start=1):
+        users_dict[i] = doc['user_name']
+    for i, p in enumerate(users_dict, start=1):
+        print(f'{i}. {users_dict[i]}')
+    w = int(input("Select one: "))
+    s = users_dict[w]
+    user = users.find_one({"user_name": s})
+    if user:
+        user_id = user["_id"]
+        census.delete_one({"_id": user_id})
+        users.delete_one({"_id": user_id})
+        print("User and related data deleted successfully.")
+    else:
+        print("Incorrect username")"""
+
+"""c = voting.find({}, {"_id": 0, "party": 1})
+party_dict = {}
+for i, doc in enumerate(c, start=1):
+    party_dict[i] = doc['party']
+for i, p in enumerate(party_dict, start=1):
+    print(f'{i}. {party_dict[i]}')
+w = int(input("Select one: "))
+s = party_dict[w]
+a = voting.find_one({"party": s})
+print(a)"""
+
 # for x in collection.find():
 # print(x)
 # user = input("Name?: ")
@@ -155,8 +222,8 @@ def voteres():
 # print(msg)
 
 # n = 1
-# for x in users.find():
-# print(x)
+for x in users.find():
+    print(x)
 # n += 1
 # mycol.find({},{ "_id": 0, "name": 1, "address": 1 })
 # candidate = dict(name=input("Candidate name: "), party=input("Represented party: "), gender=input("Gender: "), vote_count=0)
